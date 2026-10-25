@@ -1,0 +1,20 @@
+KUBICO — versão PWA instalável (Android e iPhone)
+
+FICHEIROS
+- index.html: aplicação actual
+- manifest.json: nome, ícones e modo de aplicação
+- sw.js: cache básica para abrir a estrutura principal offline
+- icons/: ícones da aplicação
+
+COMO TESTAR E INSTALAR
+1. Publica TODOS os ficheiros e a pasta icons num alojamento HTTPS (por exemplo, Vercel).
+2. No Vercel, importa o repositório que contém estes ficheiros. Mantém index.html, manifest.json, sw.js e icons/ na raiz do projecto.
+3. Abre o endereço HTTPS publicado no telemóvel.
+4. Android (Chrome): toca em “Instalar app” ou no menu do navegador e escolhe “Instalar aplicação”.
+5. iPhone (Safari): toca em Partilhar e escolhe “Adicionar ao ecrã principal”.
+
+LIMITAÇÕES IMPORTANTES
+- Não é possível instalar a PWA directamente abrindo o ficheiro HTML localmente. É necessário alojamento HTTPS (localhost serve para desenvolvimento).
+- Esta versão continua a ser uma demonstração: contas, favoritos e imóveis ficam no armazenamento local do navegador. Não existe ainda uma base de dados partilhada, autenticação de produção, carregamento seguro de documentos, nem contactos reais integrados.
+- As fotografias vêm do Unsplash e precisam de Internet; o service worker guarda apenas a estrutura básica da aplicação, não todas as fotografias.
+- Não uses dados pessoais ou documentos reais nesta demonstração.
