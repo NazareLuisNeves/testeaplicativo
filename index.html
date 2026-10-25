@@ -1,0 +1,1979 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kubico — versão actualizada</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --brown: #244c3a;
+        --brown2: #35654b;
+        --tan: #d8b77a;
+        --cream: #f4f7f2;
+        --sage: #a8b8a0;
+        --sage-light: #e2eae0;
+        --blue: #789ba3;
+        --blue-light: #e1ebed;
+        --terracotta: #d8b77a;
+        --paper: #fff;
+        --ink: #24352a;
+        --muted: #68766c;
+        --line: #dce5dc;
+        --bg: #f4f7f2;
+        --green: #35654b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      .app {
+        min-height: 100vh;
+        background: var(--bg);
+      }
+      .top {
+        height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 clamp(18px, 5vw, 72px);
+        border-bottom: 1px solid var(--line);
+        background: var(--paper);
+      }
+      .brand {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-weight: 850;
+        font-size: 25px;
+        letter-spacing: -1px;
+        color: var(--brown);
+      }
+      .mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: var(--brown);
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-size: 21px;
+      }
+      .nav {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .btn {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 18px;
+        font-weight: 700;
+        transition: 0.2s;
+      }
+      .btn.primary {
+        background: var(--brown);
+        color: #fff;
+      }
+      .btn.primary:hover {
+        background: var(--brown2);
+        transform: translateY(-1px);
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--ink);
+        border: 1px solid var(--line);
+      }
+      .btn.small {
+        padding: 9px 13px;
+        font-size: 13px;
+      }
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+      .welcome {
+        min-height: calc(100vh - 76px);
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        align-items: center;
+        gap: 40px;
+        padding: clamp(30px, 6vw, 90px);
+      }
+      .eyebrow {
+        color: var(--brown2);
+        font-size: 12px;
+        font-weight: 850;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .welcome h1 {
+        font-size: clamp(44px, 6vw, 76px);
+        line-height: 1.03;
+        letter-spacing: -3px;
+        margin: 18px 0;
+      }
+      .welcome h1 span {
+        color: var(--brown2);
+      }
+      .lead {
+        font-size: 18px;
+        line-height: 1.7;
+        color: var(--muted);
+        max-width: 540px;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 28px 0;
+      }
+      .trust {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .trust span:before {
+        content: '✓';
+        color: var(--green);
+        font-weight: 900;
+        margin-right: 7px;
+      }
+      .hero-art {
+        min-height: 440px;
+        border-radius: 28px;
+        background: linear-gradient(
+          145deg,
+          #e2eae0 0%,
+          #e1ebed 48%,
+          #d8b77a 100%
+        );
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hero-art:before {
+        content: '';
+        position: absolute;
+        width: 290px;
+        height: 290px;
+        border-radius: 50%;
+        background: #fff8ed;
+        right: -50px;
+        top: -70px;
+        opacity: 0.65;
+      }
+      .house {
+        position: relative;
+        width: min(78%, 410px);
+        filter: drop-shadow(0 25px 22px #244c3a40);
+      }
+      .floating {
+        position: absolute;
+        background: #fff;
+        color: #24352a;
+        border-radius: 15px;
+        padding: 14px 17px;
+        box-shadow: 0 12px 35px #244c3a22;
+        font-size: 13px;
+      }
+      .floating b {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      .float1 {
+        left: 18px;
+        bottom: 32px;
+      }
+      .float2 {
+        right: 18px;
+        top: 36px;
+      }
+      .auth-wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 50px 20px;
+        display: grid;
+        grid-template-columns: 0.8fr 1.2fr;
+        gap: 30px;
+      }
+      .auth-aside {
+        background: var(--brown);
+        color: #fff;
+        border-radius: 24px;
+        padding: 35px;
+        min-height: 400px;
+      }
+      .auth-aside h2 {
+        font-size: 34px;
+        line-height: 1.15;
+      }
+      .auth-aside p {
+        color: #e7d7c8;
+        line-height: 1.7;
+      }
+      .form-card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        padding: clamp(22px, 4vw, 40px);
+      }
+      .form-card h2 {
+        margin: 0 0 8px;
+        font-size: 29px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 25px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-bottom: 16px;
+      }
+      .field label {
+        font-size: 13px;
+        font-weight: 750;
+      }
+      .field input,
+      .field select {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        background: var(--bg);
+        color: var(--ink);
+        outline: none;
+      }
+      .field input:focus,
+      .field select:focus {
+        border-color: var(--tan);
+        box-shadow: 0 0 0 3px #d8b77a30;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .upload-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 8px 0 18px;
+      }
+      .upload {
+        border: 1px dashed var(--tan);
+        padding: 14px;
+        border-radius: 13px;
+        background: #f8faf7;
+        min-height: 105px;
+      }
+      .upload label {
+        display: block;
+        font-size: 12px;
+        font-weight: 750;
+        margin-bottom: 9px;
+      }
+      .upload input {
+        font-size: 11px;
+        width: 100%;
+        color: var(--muted);
+      }
+      .notice {
+        font-size: 12px;
+        line-height: 1.5;
+        background: #edf3eb;
+        padding: 12px;
+        border-radius: 10px;
+        color: var(--muted);
+        margin: 15px 0;
+      }
+      .wide {
+        width: 100%;
+      }
+      .text-link {
+        color: var(--brown2);
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .center {
+        text-align: center;
+      }
+      .dashboard {
+        max-width: 1300px;
+        margin: auto;
+        padding: 30px clamp(16px, 4vw, 48px) 60px;
+      }
+      .hello {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+      }
+      .hello h1 {
+        margin: 5px 0;
+        font-size: clamp(27px, 3vw, 38px);
+        letter-spacing: -1px;
+      }
+      .hello p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .profile-chip {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 10px 15px;
+      }
+      .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #dce8d9;
+        color: #244c3a;
+        font-weight: 900;
+        font-size: 19px;
+      }
+      .search-panel {
+        display: flex;
+        gap: 12px;
+        background: var(--paper);
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        margin-bottom: 22px;
+      }
+      .searchbox {
+        flex: 1;
+        position: relative;
+      }
+      .searchbox input {
+        width: 100%;
+        height: 48px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0 15px;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+      .stat {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        padding: 20px;
+        border-radius: 17px;
+      }
+      .stat .num {
+        font-size: 30px;
+        font-weight: 850;
+        letter-spacing: -1px;
+      }
+      .stat p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin: 26px 0 16px;
+      }
+      .section-head h2 {
+        font-size: 22px;
+        margin: 0;
+      }
+      .section-head p {
+        margin: 5px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .house-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .house-card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--paper);
+      }
+      .house-img {
+        height: 185px;
+        position: relative;
+        overflow: hidden;
+        background: #dce8d9;
+      }
+      .house-img svg,
+      .house-img img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .house-img img {
+        object-fit: cover;
+        transition: transform 0.35s ease;
+      }
+      .house-card:hover .house-img img {
+        transform: scale(1.035);
+      }
+      .tag {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        border-radius: 8px;
+        padding: 6px 9px;
+        background: #fff;
+        color: #244c3a;
+        font-size: 11px;
+        font-weight: 850;
+      }
+      .house-info {
+        padding: 16px;
+      }
+      .house-info h3 {
+        margin: 0 0 6px;
+        font-size: 17px;
+      }
+      .location {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .price {
+        font-size: 20px;
+        font-weight: 850;
+        margin: 14px 0;
+      }
+      .price small {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+      .agent {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding-top: 13px;
+        border-top: 1px solid var(--line);
+        font-size: 12px;
+      }
+      .agent .avatar {
+        width: 31px;
+        height: 31px;
+        font-size: 12px;
+      }
+      .agent span {
+        display: block;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+      .agent .btn {
+        margin-left: auto;
+      }
+      .results-note {
+        color: var(--muted);
+        font-size: 13px;
+        margin: 12px 0;
+      }
+      .empty {
+        display: none;
+        padding: 35px;
+        text-align: center;
+        color: var(--muted);
+        border: 1px dashed var(--line);
+        border-radius: 16px;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2e241d;
+        color: #fff;
+        padding: 13px 18px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px #0003;
+        display: none;
+        z-index: 10;
+        font-size: 14px;
+        max-width: 90%;
+        text-align: center;
+      }
+      .map-panel {
+        display: none;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        padding: 16px;
+        background: var(--paper);
+        margin-bottom: 20px;
+      }
+      .map-surface {
+        height: 200px;
+        border-radius: 12px;
+        background: repeating-linear-gradient(
+          35deg,
+          #e6dfd5 0 14px,
+          #d9d0c3 14px 16px
+        );
+        position: relative;
+        overflow: hidden;
+      }
+      .road {
+        position: absolute;
+        height: 15px;
+        background: #fff9;
+        transform: rotate(-22deg);
+        width: 120%;
+        top: 42%;
+        left: -10%;
+      }
+      .road.r2 {
+        transform: rotate(32deg);
+        top: 65%;
+      }
+      .pin {
+        position: absolute;
+        background: var(--brown);
+        color: white;
+        padding: 8px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        box-shadow: 0 4px 12px #0002;
+      }
+      .pin:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 16px;
+        border-width: 5px 5px 0;
+        border-style: solid;
+        border-color: var(--brown) transparent transparent;
+      }
+      .pin.p1 {
+        top: 25%;
+        left: 23%;
+      }
+      .pin.p2 {
+        top: 53%;
+        left: 57%;
+      }
+      .pin.p3 {
+        top: 16%;
+        left: 73%;
+      }
+      .footer {
+        padding: 24px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 12px;
+        border-top: 1px solid var(--line);
+      }
+      @media (max-width: 850px) {
+        .welcome {
+          grid-template-columns: 1fr;
+          padding: 35px 22px;
+        }
+        .hero-art {
+          min-height: 330px;
+        }
+        .auth-wrap {
+          grid-template-columns: 1fr;
+        }
+        .auth-aside {
+          min-height: unset;
+        }
+        .house-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .stats {
+          gap: 9px;
+        }
+        .stat {
+          padding: 14px;
+        }
+        .stat .num {
+          font-size: 25px;
+        }
+      }
+      @media (max-width: 560px) {
+        .top {
+          height: 66px;
+          padding: 0 16px;
+        }
+        .brand {
+          font-size: 22px;
+        }
+        .nav .btn {
+          padding: 9px 11px;
+          font-size: 12px;
+        }
+        .welcome {
+          min-height: auto;
+        }
+        .welcome h1 {
+          letter-spacing: -2px;
+        }
+        .hero-art {
+          min-height: 275px;
+        }
+        .auth-wrap {
+          padding: 24px 13px;
+        }
+        .two,
+        .upload-grid {
+          grid-template-columns: 1fr;
+        }
+        .stats {
+          grid-template-columns: 1fr;
+        }
+        .stat {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .stat p {
+          max-width: 125px;
+          text-align: right;
+        }
+        .search-panel {
+          flex-direction: column;
+        }
+        .search-panel .btn {
+          width: 100%;
+        }
+        .house-grid {
+          grid-template-columns: 1fr;
+        }
+        .house-img {
+          height: 220px;
+        }
+        .profile-chip {
+          width: 100%;
+        }
+        .hello {
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="top">
+        <div class="brand">
+          <div class="mark">⌂</div>
+          Kubico
+        </div>
+        <nav class="nav">
+          <button class="btn ghost small" onclick="showPage('login')">
+            Entrar</button
+          ><button class="btn primary small" onclick="showPage('signup')">
+            Criar conta
+          </button>
+        </nav>
+      </header>
+      <main>
+        <section id="welcome" class="page active">
+          <div class="welcome">
+            <div>
+              <div class="eyebrow">O teu próximo lar começa aqui</div>
+              <h1>Encontrar casa.<br /><span>Sem complicações.</span></h1>
+              <p class="lead">
+                Descobre casas por zona e entra em contacto com intermediários.
+                Ou cria o teu perfil e mostra os imóveis que tens disponíveis.
+              </p>
+              <div class="actions">
+                <button
+                  class="btn primary"
+                  onclick="showPage('customerSignup')"
+                >
+                  Procuro casa <span>→</span></button
+                ><button class="btn ghost" onclick="showPage('signup')">
+                  Sou intermediário</button
+                ><button class="btn ghost" onclick="showPage('login')">
+                  Já tenho conta
+                </button>
+              </div>
+              <div class="trust">
+                <span>Perfis verificados</span><span>Pesquisa por zona</span
+                ><span>Contacto directo</span>
+              </div>
+            </div>
+            <div class="hero-art">
+              <svg
+                class="house"
+                viewBox="0 0 420 360"
+                role="img"
+                aria-label="Ilustração de uma casa"
+              >
+                <path
+                  d="M40 164 L210 32 L380 164"
+                  fill="#35654b"
+                  stroke="#244c3a"
+                  stroke-width="9"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M76 151 L76 324 L344 324 L344 151 L210 57 Z"
+                  fill="#f8faf7"
+                />
+                <path
+                  d="M182 222 L182 324 L247 324 L247 222 Q215 190 182 222"
+                  fill="#789b80"
+                />
+                <rect
+                  x="105"
+                  y="190"
+                  width="54"
+                  height="55"
+                  rx="4"
+                  fill="#789ba3"
+                  stroke="#35654b"
+                  stroke-width="7"
+                />
+                <path
+                  d="M132 190 V245 M105 217 H159"
+                  stroke="#35654b"
+                  stroke-width="5"
+                />
+                <rect
+                  x="267"
+                  y="190"
+                  width="45"
+                  height="55"
+                  rx="4"
+                  fill="#789ba3"
+                  stroke="#35654b"
+                  stroke-width="7"
+                />
+                <path
+                  d="M289 190 V245 M267 217 H312"
+                  stroke="#35654b"
+                  stroke-width="5"
+                />
+                <path
+                  d="M55 324 H365"
+                  stroke="#244c3a"
+                  stroke-width="9"
+                  stroke-linecap="round"
+                />
+                <circle cx="332" cy="82" r="22" fill="#e7d4bd" />
+              </svg>
+              <div class="floating float1">
+                <b>Casas por descobrir</b>Encontra por zona e orçamento
+              </div>
+              <div class="floating float2">
+                <b>⌖ Perfis de confiança</b>Intermediários identificados
+              </div>
+            </div>
+          </div>
+        </section>
+        <section id="login" class="page">
+          <div class="auth-wrap">
+            <aside class="auth-aside">
+              <div class="eyebrow" style="color: #e7c7a5">
+                Bem-vindo de volta
+              </div>
+              <h2>O teu próximo negócio começa aqui.</h2>
+              <p>
+                Entra na tua conta para gerir os teus imóveis, acompanhar
+                interessados e responder a potenciais clientes.
+              </p>
+              <div style="font-size: 52px; margin-top: 40px">⌂</div>
+            </aside>
+            <div class="form-card">
+              <h2>Iniciar sessão</h2>
+              <div class="sub">Introduz os dados da tua conta Kubico.</div>
+              <form
+                onsubmit="
+                  event.preventDefault()
+                  loginUser()
+                "
+              >
+                <div class="field">
+                  <label for="loginEmail">Email ou número de telefone</label
+                  ><input
+                    id="loginEmail"
+                    required
+                    placeholder="exemplo@email.com ou 9xx xxx xxx"
+                  />
+                </div>
+                <div class="field">
+                  <label for="loginRole">Tipo de conta</label
+                  ><select id="loginRole">
+                    <option value="customer">Procuro casa</option>
+                    <option value="agent">Intermediário</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="loginPassword">Palavra-passe</label
+                  ><input
+                    id="loginPassword"
+                    type="password"
+                    required
+                    minlength="4"
+                    placeholder="A tua palavra-passe"
+                  />
+                </div>
+                <button class="btn primary wide" type="submit">
+                  Entrar na minha conta →
+                </button>
+              </form>
+              <p
+                class="center"
+                style="margin-top: 22px; font-size: 14px; color: var(--muted)"
+              >
+                Ainda não tens conta?
+                <a class="text-link" onclick="showPage('signup')"
+                  >Cadastra-te aqui</a
+                >
+              </p>
+              <div class="notice">Também podes criar a tua conta.</div>
+            </div>
+          </div>
+        </section>
+        <section id="signup" class="page">
+          <div class="auth-wrap">
+            <aside class="auth-aside">
+              <div class="eyebrow" style="color: #e7c7a5">
+                Cadastro de intermediário
+              </div>
+              <h2>Mostra as casas. Ganha confiança.</h2>
+              <p>
+                Cria o teu perfil profissional, indica as zonas em que trabalhas
+                e apresenta os imóveis que tens para arrendar.
+              </p>
+              <ul style="padding-left: 18px; line-height: 2; color: #e7d7c8">
+                <li>Perfil profissional</li>
+                <li>Imóveis e zonas de actuação</li>
+                <li>Gestão de interessados</li>
+              </ul>
+            </aside>
+            <div class="form-card">
+              <h2>Criar conta Kubico</h2>
+              <div class="sub">
+                Preenche os dados abaixo. Os campos com * são obrigatórios.
+              </div>
+              <form
+                id="signupForm"
+                onsubmit="
+                  event.preventDefault()
+                  registerUser()
+                "
+              >
+                <div class="two">
+                  <div class="field">
+                    <label for="fullName">Nome completo *</label
+                    ><input
+                      id="fullName"
+                      required
+                      placeholder="Nome como consta no BI"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="phone">Contacto telefónico *</label
+                    ><input
+                      id="phone"
+                      required
+                      type="tel"
+                      placeholder="+244 9xx xxx xxx"
+                    />
+                  </div>
+                </div>
+                <div class="two">
+                  <div class="field">
+                    <label for="email">Email *</label
+                    ><input
+                      id="email"
+                      type="email"
+                      required
+                      placeholder="teu@email.com"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="zone">Zona principal de actuação *</label
+                    ><select id="zone" required>
+                      <option value="">Escolhe uma zona</option>
+                      <option>Maianga</option>
+                      <option>Talatona</option>
+                      <option>Viana</option>
+                      <option>Benfica</option>
+                      <option>Ingombota</option>
+                      <option>Kilamba</option>
+                      <option>Cacuaco</option>
+                      <option>Outra zona de Luanda</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="zones">Outras zonas em que actuas</label
+                  ><input
+                    id="zones"
+                    placeholder="Ex.: Patriota, Camama, Morro Bento"
+                  />
+                </div>
+                <div class="field">
+                  <label for="selfie"
+                    >Fotografia de perfil / selfie de verificação *</label
+                  ><input id="selfie" type="file" accept="image/*" required />
+                </div>
+                <div
+                  style="font-weight: 800; font-size: 14px; margin: 14px 0 8px"
+                >
+                  Documentos para verificação
+                </div>
+                <div class="upload-grid">
+                  <div class="upload">
+                    <label for="biFront">BI — frente *</label
+                    ><input
+                      id="biFront"
+                      type="file"
+                      accept="image/*"
+                      required
+                    />
+                  </div>
+                  <div class="upload">
+                    <label for="biBack">BI — verso *</label
+                    ><input id="biBack" type="file" accept="image/*" required />
+                  </div>
+                  <div class="upload">
+                    <label for="criminal">Registo criminal *</label
+                    ><input
+                      id="criminal"
+                      type="file"
+                      accept="image/*,.pdf,application/pdf"
+                      required
+                    />
+                  </div>
+                  <div class="upload">
+                    <label for="extraDoc">Documento adicional (opcional)</label
+                    ><input
+                      id="extraDoc"
+                      type="file"
+                      accept="image/*,.pdf,application/pdf"
+                    />
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="password">Criar palavra-passe *</label
+                  ><input
+                    id="password"
+                    type="password"
+                    minlength="8"
+                    required
+                    placeholder="Mínimo de 8 caracteres"
+                  />
+                </div>
+                <div class="notice">
+                  <b>Privacidade:</b> o BI, a selfie e o registo criminal são
+                  dados sensíveis. Esta é apenas uma demonstração: os ficheiros
+                  não são enviados nem guardados num servidor.
+                </div>
+                <label
+                  style="
+                    display: flex;
+                    gap: 9px;
+                    align-items: flex-start;
+                    font-size: 12px;
+                    line-height: 1.5;
+                    margin-bottom: 18px;
+                  "
+                  ><input
+                    id="consent"
+                    type="checkbox"
+                    required
+                    style="margin-top: 3px"
+                  />
+                  Confirmo que os dados são meus e aceito que sejam usados para
+                  verificação do perfil.</label
+                ><button class="btn primary wide" type="submit">
+                  Criar perfil de intermediário →
+                </button>
+              </form>
+              <p
+                class="center"
+                style="margin-top: 20px; font-size: 14px; color: var(--muted)"
+              >
+                Queres apenas encontrar casa?
+                <a class="text-link" onclick="showPage('customerSignup')"
+                  >Cadastra-te como cliente</a
+                >
+              </p>
+              <p
+                class="center"
+                style="margin-top: 10px; font-size: 14px; color: var(--muted)"
+              >
+                Já tens conta?
+                <a class="text-link" onclick="showPage('login')"
+                  >Inicia sessão</a
+                >
+              </p>
+            </div>
+          </div>
+        </section>
+        <section id="dashboard" class="page">
+          <div class="dashboard">
+            <div class="hello">
+              <div>
+                <div class="eyebrow">Área do intermediário</div>
+                <h1>Olá, <span id="dashName">Intermediário</span> 👋</h1>
+                <p>Resumo da tua actividade no Kubico.</p>
+              </div>
+              <div class="profile-chip">
+                <div class="avatar" id="dashAvatar">K</div>
+                <div>
+                  <b id="dashFullName">Perfil Kubico</b>
+                  <div
+                    style="
+                      font-size: 12px;
+                      color: var(--muted);
+                      margin-top: 3px;
+                    "
+                  >
+                    Intermediário · <span id="dashZone">Luanda</span>
+                  </div>
+                </div>
+                <button class="btn ghost small" onclick="showPage('welcome')">
+                  Sair
+                </button>
+              </div>
+            </div>
+            <div class="search-panel">
+              <div class="searchbox">
+                <input
+                  id="searchZone"
+                  placeholder="Pesquisar por zona: Talatona, Viana, Maianga…"
+                  oninput="filterHouses()"
+                />
+              </div>
+              <button class="btn primary" onclick="filterHouses()">
+                ⌕ Pesquisar casas</button
+              ><button class="btn ghost" onclick="toggleMap()">
+                ⌖ Ver mapa
+              </button>
+            </div>
+            <div id="mapPanel" class="map-panel">
+              <b style="display: block; margin-bottom: 12px"
+                >Mapa ilustrativo das zonas</b
+              >
+              <div class="map-surface">
+                <div class="road"></div>
+                <div class="road r2"></div>
+                <div class="pin p1">Talatona · 2 casas</div>
+                <div class="pin p2">Maianga · 3 casas</div>
+                <div class="pin p3">Viana · 1 casa</div>
+              </div>
+              <div class="results-note">
+                Mapa demonstrativo, sem localização real nem integração de
+                mapas.
+              </div>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <div>
+                  <div class="num" id="statInterested">24</div>
+                  <p>Utilizadores interessados</p>
+                </div>
+                <span style="font-size: 25px">♡</span>
+              </div>
+              <div class="stat">
+                <div>
+                  <div class="num" id="statHouses">6</div>
+                  <p>Imóveis publicados</p>
+                </div>
+                <span style="font-size: 25px">⌂</span>
+              </div>
+              <div class="stat">
+                <div>
+                  <div class="num">
+                    4,8 <small style="font-size: 13px">/ 5</small>
+                  </div>
+                  <p>Avaliação do perfil</p>
+                </div>
+                <span style="font-size: 25px">☆</span>
+              </div>
+            </div>
+            <div class="section-head">
+              <div>
+                <h2>Casas disponíveis</h2>
+                <p id="resultText">
+                  Imóveis apresentados por intermediários em Luanda.
+                </p>
+              </div>
+              <button class="btn ghost small" onclick="addDemoHouse()">
+                + Adicionar imóvel
+              </button>
+            </div>
+            <div id="houseGrid" class="house-grid">
+              <article class="house-card" data-zone="talatona patriota">
+                <div class="house-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85"
+                    alt="Fotografia de imóvel para arrendamento"
+                    loading="lazy"
+                  /><span class="tag">Disponível</span>
+                </div>
+                <div class="house-info">
+                  <h3>Moradia T3 moderna</h3>
+                  <div class="location">⌖ Talatona, Patriota</div>
+                  <div class="price">450.000 Kz <small>/ mês</small></div>
+                  <div class="agent">
+                    <div class="avatar">JM</div>
+                    <div>
+                      <b>João Manuel</b><span>Intermediário verificado</span>
+                    </div>
+                    <button
+                      class="btn ghost small"
+                      onclick="contactAgent('João Manuel', 'Talatona')"
+                    >
+                      Contactar
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="house-card" data-zone="maianga ingombota">
+                <div class="house-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"
+                    alt="Fotografia de imóvel para arrendamento"
+                    loading="lazy"
+                  /><span class="tag">Disponível</span>
+                </div>
+                <div class="house-info">
+                  <h3>Vivenda familiar T2</h3>
+                  <div class="location">⌖ Maianga, Luanda</div>
+                  <div class="price">280.000 Kz <small>/ mês</small></div>
+                  <div class="agent">
+                    <div class="avatar">AC</div>
+                    <div>
+                      <b>Ana Costa</b><span>Intermediária verificada</span>
+                    </div>
+                    <button
+                      class="btn ghost small"
+                      onclick="contactAgent('Ana Costa', 'Maianga')"
+                    >
+                      Contactar
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="house-card" data-zone="viana kilamba">
+                <div class="house-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85"
+                    alt="Fotografia de imóvel para arrendamento"
+                    loading="lazy"
+                  /><span class="tag">Disponível</span>
+                </div>
+                <div class="house-info">
+                  <h3>Casa térrea T2</h3>
+                  <div class="location">⌖ Kilamba, Luanda</div>
+                  <div class="price">180.000 Kz <small>/ mês</small></div>
+                  <div class="agent">
+                    <div class="avatar">PN</div>
+                    <div>
+                      <b>Paulo Neto</b><span>Intermediário verificado</span>
+                    </div>
+                    <button
+                      class="btn ghost small"
+                      onclick="contactAgent('Paulo Neto', 'Kilamba')"
+                    >
+                      Contactar
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="house-card" data-zone="benfica talatona">
+                <div class="house-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85"
+                    alt="Fotografia de imóvel para arrendamento"
+                    loading="lazy"
+                  /><span class="tag">Disponível</span>
+                </div>
+                <div class="house-info">
+                  <h3>Moradia T3 com quintal</h3>
+                  <div class="location">⌖ Benfica, Luanda</div>
+                  <div class="price">350.000 Kz <small>/ mês</small></div>
+                  <div class="agent">
+                    <div class="avatar">LM</div>
+                    <div>
+                      <b>Luís Miguel</b><span>Intermediário verificado</span>
+                    </div>
+                    <button
+                      class="btn ghost small"
+                      onclick="contactAgent('Luís Miguel', 'Benfica')"
+                    >
+                      Contactar
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="house-card" data-zone="cacuaco viana">
+                <div class="house-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1000&q=85"
+                    alt="Fotografia de imóvel para arrendamento"
+                    loading="lazy"
+                  /><span class="tag">Disponível</span>
+                </div>
+                <div class="house-info">
+                  <h3>Apartamento T2</h3>
+                  <div class="location">⌖ Cacuaco, Luanda</div>
+                  <div class="price">150.000 Kz <small>/ mês</small></div>
+                  <div class="agent">
+                    <div class="avatar">FS</div>
+                    <div>
+                      <b>Fátima Silva</b><span>Intermediária verificada</span>
+                    </div>
+                    <button
+                      class="btn ghost small"
+                      onclick="contactAgent('Fátima Silva', 'Cacuaco')"
+                    >
+                      Contactar
+                    </button>
+                  </div>
+                </div>
+              </article>
+              <article class="house-card" data-zone="ingombota maianga">
+                <div class="house-img">
+                  <img
+                    src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"
+                    alt="Fotografia de imóvel para arrendamento"
+                    loading="lazy"
+                  /><span class="tag">Disponível</span>
+                </div>
+                <div class="house-info">
+                  <h3>Casa T2 mobilada</h3>
+                  <div class="location">⌖ Ingombota, Luanda</div>
+                  <div class="price">320.000 Kz <small>/ mês</small></div>
+                  <div class="agent">
+                    <div class="avatar">RC</div>
+                    <div>
+                      <b>Rui Carlos</b><span>Intermediário verificado</span>
+                    </div>
+                    <button
+                      class="btn ghost small"
+                      onclick="contactAgent('Rui Carlos', 'Ingombota')"
+                    >
+                      Contactar
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div id="emptyState" class="empty">
+              Não encontrámos casas nessa zona. Experimenta outra zona de
+              Luanda.
+            </div>
+            <div class="notice" style="margin-top: 28px">
+              Os imóveis, os nomes e as métricas apresentados são dados
+              fictícios para demonstrar o funcionamento do Kubico.
+            </div>
+          </div>
+        </section>
+
+        <section id="customerSignup" class="page">
+          <div class="auth-wrap">
+            <aside class="auth-aside">
+              <div class="eyebrow" style="color: #d8e8d6">
+                Cadastro de cliente
+              </div>
+              <h2>A casa certa pode estar mais perto.</h2>
+              <p>
+                Cria uma conta gratuita para pesquisar imóveis por zona, guardar
+                favoritos e contactar intermediários.
+              </p>
+              <ul style="padding-left: 18px; line-height: 2; color: #e7f0e6">
+                <li>Pesquisa por zona</li>
+                <li>Favoritos guardados nesta conta</li>
+                <li>Contacto com intermediários</li>
+              </ul>
+            </aside>
+            <div class="form-card">
+              <h2>Quero encontrar casa</h2>
+              <div class="sub">Preenche os teus dados para começar.</div>
+              <form
+                onsubmit="
+                  event.preventDefault()
+                  registerCustomer()
+                "
+              >
+                <div class="field">
+                  <label for="customerName">Nome completo *</label
+                  ><input id="customerName" required placeholder="O teu nome" />
+                </div>
+                <div class="two">
+                  <div class="field">
+                    <label for="customerPhone">Contacto *</label
+                    ><input
+                      id="customerPhone"
+                      required
+                      type="tel"
+                      placeholder="+244 9xx xxx xxx"
+                    />
+                  </div>
+                  <div class="field">
+                    <label for="customerEmail">Email *</label
+                    ><input
+                      id="customerEmail"
+                      required
+                      type="email"
+                      placeholder="teu@email.com"
+                    />
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="customerZone">Zona onde procuras casa</label
+                  ><select id="customerZone">
+                    <option value="">Qualquer zona</option>
+                    <option>Talatona</option>
+                    <option>Maianga</option>
+                    <option>Kilamba</option>
+                    <option>Benfica</option>
+                    <option>Viana</option>
+                    <option>Cacuaco</option>
+                    <option>Ingombota</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="customerBudget">Orçamento mensal (Kz)</label
+                  ><select id="customerBudget">
+                    <option value="">Ainda não definido</option>
+                    <option value="150000">Até 150.000 Kz</option>
+                    <option value="250000">Até 250.000 Kz</option>
+                    <option value="350000">Até 350.000 Kz</option>
+                    <option value="500000">Até 500.000 Kz</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="customerPassword">Criar palavra-passe *</label
+                  ><input
+                    id="customerPassword"
+                    type="password"
+                    minlength="8"
+                    required
+                    placeholder="Mínimo de 8 caracteres"
+                  />
+                </div>
+                <div class="notice">
+                  Demonstração: os dados ficam apenas neste navegador e não são
+                  enviados para um servidor. Não use palavras-passe reais.
+                </div>
+                <button class="btn primary wide" type="submit">
+                  Criar conta e procurar casa →
+                </button>
+              </form>
+              <p
+                class="center"
+                style="margin-top: 20px; font-size: 14px; color: var(--muted)"
+              >
+                Já tens conta?
+                <a class="text-link" onclick="showPage('login')"
+                  >Inicia sessão</a
+                >
+              </p>
+            </div>
+          </div>
+        </section>
+        <section id="customerDashboard" class="page">
+          <div class="dashboard">
+            <div class="hello">
+              <div>
+                <div class="eyebrow">Área do cliente</div>
+                <h1>Olá, <span id="customerDashName">Cliente</span> 👋</h1>
+                <p>Encontra uma casa que combine contigo.</p>
+              </div>
+              <div class="profile-chip">
+                <div class="avatar" id="customerAvatar">C</div>
+                <div>
+                  <b id="customerFullName">Cliente Kubico</b>
+                  <div
+                    style="
+                      font-size: 12px;
+                      color: var(--muted);
+                      margin-top: 3px;
+                    "
+                  >
+                    À procura de casa ·
+                    <span id="customerDashZone">Luanda</span>
+                  </div>
+                </div>
+                <button class="btn ghost small" onclick="logout()">Sair</button>
+              </div>
+            </div>
+            <div class="search-panel">
+              <div class="searchbox">
+                <input
+                  id="customerSearch"
+                  placeholder="Pesquisar zona, por exemplo Talatona ou Maianga…"
+                  oninput="filterCustomerHouses()"
+                />
+              </div>
+              <button class="btn primary" onclick="filterCustomerHouses()">
+                ⌕ Pesquisar</button
+              ><button class="btn ghost" onclick="toggleCustomerMap()">
+                ⌖ Ver mapa
+              </button>
+            </div>
+            <div id="customerMap" class="map-panel">
+              <b style="display: block; margin-bottom: 12px"
+                >Mapa ilustrativo das casas</b
+              >
+              <div class="map-surface">
+                <div class="road"></div>
+                <div class="road r2"></div>
+                <div class="pin p1">Talatona</div>
+                <div class="pin p2">Maianga</div>
+                <div class="pin p3">Viana</div>
+              </div>
+              <div class="results-note">
+                Mapa de demonstração, sem geolocalização real.
+              </div>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <div>
+                  <div class="num" id="favoriteCount">0</div>
+                  <p>Casas favoritas</p>
+                </div>
+                <span style="font-size: 25px">♡</span>
+              </div>
+              <div class="stat">
+                <div>
+                  <div class="num">6</div>
+                  <p>Imóveis</p>
+                </div>
+                <span style="font-size: 25px">⌂</span>
+              </div>
+              <div class="stat">
+                <div>
+                  <div class="num">7</div>
+                  <p>Zonas disponíveis</p>
+                </div>
+                <span style="font-size: 25px">⌖</span>
+              </div>
+            </div>
+            <div class="section-head">
+              <div>
+                <h2>Casas para arrendar</h2>
+                <p id="customerResultText">Imóveis de exemplo em Luanda.</p>
+              </div>
+            </div>
+            <div id="customerHouseGrid" class="house-grid"></div>
+            <div id="customerEmpty" class="empty">
+              Não encontrámos casas nessa zona. Experimenta outra pesquisa.
+            </div>
+            <div class="notice" style="margin-top: 25px">
+              Contactos e favoritos são simulados neste navegador.
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        Kubico · Casas e oportunidades, mais perto de ti.
+      </footer>
+      <div id="toast" class="toast"></div>
+    </div>
+    <script>
+      const DB_KEY = 'kubico_demo_db_v4' // versão nova: não reutiliza contas de testes antigas
+      const demoHouses = [
+        {
+          id: 1,
+          image:
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85',
+          title: 'Moradia T3 moderna',
+          zone: 'Talatona, Patriota',
+          key: 'talatona patriota',
+          price: 450000,
+          agent: 'João Manuel',
+          initials: 'JM',
+          type: 'Intermediário verificado',
+          desc: 'Quintal amplo e boa iluminação.',
+        },
+        {
+          id: 2,
+          image:
+            'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85',
+          title: 'Vivenda familiar T2',
+          zone: 'Maianga, Luanda',
+          key: 'maianga',
+          price: 280000,
+          agent: 'Ana Costa',
+          initials: 'AC',
+          type: 'Intermediária verificada',
+          desc: 'Ideal para uma pequena família.',
+        },
+        {
+          id: 3,
+          image:
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85',
+          title: 'Casa térrea T2',
+          zone: 'Kilamba, Luanda',
+          key: 'kilamba',
+          price: 180000,
+          agent: 'Paulo Neto',
+          initials: 'PN',
+          type: 'Intermediário verificado',
+          desc: 'Zona residencial tranquila.',
+        },
+        {
+          id: 4,
+          image:
+            'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85',
+          title: 'Moradia T3 com quintal',
+          zone: 'Benfica, Luanda',
+          key: 'benfica',
+          price: 350000,
+          agent: 'Luís Miguel',
+          initials: 'LM',
+          type: 'Intermediário verificado',
+          desc: 'Espaço exterior e estacionamento.',
+        },
+        {
+          id: 5,
+          image:
+            'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1000&q=85',
+          title: 'Apartamento T2',
+          zone: 'Cacuaco, Luanda',
+          key: 'cacuaco',
+          price: 150000,
+          agent: 'Fátima Silva',
+          initials: 'FS',
+          type: 'Intermediária verificada',
+          desc: 'Opção económica para arrendamento.',
+        },
+        {
+          id: 6,
+          image:
+            'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85',
+          title: 'Casa T2 mobilada',
+          zone: 'Ingombota, Luanda',
+          key: 'ingombota',
+          price: 320000,
+          agent: 'Rui Carlos',
+          initials: 'RC',
+          type: 'Intermediário verificado',
+          desc: 'Casa mobilada perto de serviços.',
+        },
+      ]
+      let currentUser = null
+      let favorites = new Set()
+      function readDB() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(DB_KEY))
+          if (
+            !parsed ||
+            !Array.isArray(parsed.users) ||
+            !Array.isArray(parsed.houses)
+          )
+            return { users: [], houses: [...demoHouses] }
+          return parsed
+        } catch (e) {
+          return { users: [], houses: [...demoHouses] }
+        }
+      }
+      function saveDB(db) {
+        try {
+          localStorage.setItem(DB_KEY, JSON.stringify(db))
+        } catch (e) {
+          showToast('Não foi possível guardar os dados neste navegador.')
+        }
+      }
+      function showPage(id) {
+        document
+          .querySelectorAll('.page')
+          .forEach((p) => p.classList.remove('active'))
+        document.getElementById(id).classList.add('active')
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+      function showToast(message) {
+        const t = document.getElementById('toast')
+        t.textContent = message
+        t.style.display = 'block'
+        clearTimeout(window.toastTimer)
+        window.toastTimer = setTimeout(() => (t.style.display = 'none'), 3200)
+      }
+      function initials(name) {
+        return (name || 'Kubico')
+          .trim()
+          .split(/\s+/)
+          .map((w) => w[0])
+          .join('')
+          .slice(0, 2)
+          .toUpperCase()
+      }
+      function registerUser() {
+        const name = document.getElementById('fullName').value.trim(),
+          email = document.getElementById('email').value.trim().toLowerCase(),
+          password = document.getElementById('password').value
+        const db = readDB()
+        if (
+          db.users.some((u) => (u.email || '').trim().toLowerCase() === email)
+        ) {
+          showToast(
+            'Este email já está registado nesta conta. Se não reconheces a conta, abre a versão actualizada e tenta novamente.',
+          )
+          return
+        }
+        const user = {
+          id: Date.now(),
+          role: 'agent',
+          name,
+          phone: document.getElementById('phone').value,
+          email,
+          password,
+          zone: document.getElementById('zone').value,
+          zones: document.getElementById('zones').value,
+          createdAt: new Date().toISOString(),
+        }
+        db.users.push(user)
+        saveDB(db)
+        currentUser = user
+        setupAgentDashboard(user, true)
+        showPage('dashboard')
+        showToast('Conta criada. Documentos não foram enviados nem guardados.')
+      }
+      function registerCustomer() {
+        const name = document.getElementById('customerName').value.trim(),
+          email = document
+            .getElementById('customerEmail')
+            .value.trim()
+            .toLowerCase(),
+          password = document.getElementById('customerPassword').value
+        const db = readDB()
+        if (
+          db.users.some((u) => (u.email || '').trim().toLowerCase() === email)
+        ) {
+          showToast(
+            'Este email já está registado nesta conta. Se não reconheces a conta, abre a versão actualizada e tenta novamente.',
+          )
+          return
+        }
+        const user = {
+          id: Date.now(),
+          role: 'customer',
+          name,
+          phone: document.getElementById('customerPhone').value,
+          email,
+          password,
+          zone: document.getElementById('customerZone').value,
+          budget: document.getElementById('customerBudget').value,
+          createdAt: new Date().toISOString(),
+        }
+        db.users.push(user)
+        saveDB(db)
+        currentUser = user
+        setupCustomerDashboard(user)
+        showPage('customerDashboard')
+        showToast('Conta de cliente criada nesta demonstração.')
+      }
+      function loginUser() {
+        const email = document
+            .getElementById('loginEmail')
+            .value.trim()
+            .toLowerCase(),
+          password = document.getElementById('loginPassword').value,
+          role = document.getElementById('loginRole').value
+        const db = readDB()
+        let user = db.users.find(
+          (u) =>
+            u.email === email && u.password === password && u.role === role,
+        )
+        if (!user) {
+          if (
+            email === 'cliente@kubico.demo' &&
+            password === 'kubico123' &&
+            role === 'customer'
+          )
+            user = { name: 'Cliente Demonstração', email, role, zone: 'Luanda' }
+          else if (
+            email === 'agente@kubico.demo' &&
+            password === 'kubico123' &&
+            role === 'agent'
+          )
+            user = { name: 'João Manuel', email, role, zone: 'Talatona' }
+          else {
+            showToast('Dados não encontrados. Cria uma conta.')
+            return
+          }
+        }
+        currentUser = user
+        if (user.role === 'agent') {
+          setupAgentDashboard(user, false)
+          showPage('dashboard')
+        } else {
+          setupCustomerDashboard(user)
+          showPage('customerDashboard')
+        }
+        showToast('Sessão de demonstração iniciada.')
+      }
+      function setupAgentDashboard(user, isNew) {
+        document.getElementById('dashName').textContent = (
+          user.name || 'Intermediário'
+        ).split(' ')[0]
+        document.getElementById('dashFullName').textContent =
+          user.name || 'Intermediário'
+        document.getElementById('dashAvatar').textContent = initials(user.name)
+        document.getElementById('dashZone').textContent = user.zone || 'Luanda'
+        document.getElementById('statInterested').textContent = isNew
+          ? '0'
+          : '24'
+        document.getElementById('statHouses').textContent = isNew ? '0' : '6'
+        document.querySelector('#dashboard .eyebrow').textContent =
+          'Área do intermediário'
+      }
+      function setupCustomerDashboard(user) {
+        document.getElementById('customerDashName').textContent = (
+          user.name || 'Cliente'
+        ).split(' ')[0]
+        document.getElementById('customerFullName').textContent =
+          user.name || 'Cliente'
+        document.getElementById('customerAvatar').textContent = initials(
+          user.name,
+        )
+        document.getElementById('customerDashZone').textContent =
+          user.zone || 'Luanda'
+        document.getElementById('customerSearch').value = user.zone || ''
+        favorites = new Set(user.favorites || [])
+        renderCustomerHouses()
+        updateFavoriteCount()
+      }
+      function logout() {
+        currentUser = null
+        showPage('welcome')
+        showToast('Sessão terminada.')
+      }
+      function filterHouses() {
+        const query = document
+          .getElementById('searchZone')
+          .value.trim()
+          .toLocaleLowerCase('pt')
+        let count = 0
+        document.querySelectorAll('#houseGrid .house-card').forEach((card) => {
+          const match =
+            !query ||
+            card.dataset.zone.toLocaleLowerCase('pt').includes(query) ||
+            card.innerText.toLocaleLowerCase('pt').includes(query)
+          card.style.display = match ? '' : 'none'
+          if (match) count++
+        })
+        document.getElementById('emptyState').style.display = count
+          ? 'none'
+          : 'block'
+        document.getElementById('resultText').textContent = query
+          ? count +
+            ' imóvel(is) encontrado(s) para “' +
+            document.getElementById('searchZone').value +
+            '”.'
+          : 'Imóveis apresentados por intermediários em Luanda.'
+      }
+      function toggleMap() {
+        const p = document.getElementById('mapPanel')
+        p.style.display = p.style.display === 'block' ? 'none' : 'block'
+      }
+      function toggleCustomerMap() {
+        const p = document.getElementById('customerMap')
+        p.style.display = p.style.display === 'block' ? 'none' : 'block'
+      }
+      function renderCustomerHouses() {
+        const grid = document.getElementById('customerHouseGrid')
+        if (!grid) return
+        const q = (document.getElementById('customerSearch').value || '')
+          .trim()
+          .toLocaleLowerCase('pt')
+        const db = readDB()
+        const houses = (
+          db.houses && db.houses.length ? db.houses : demoHouses
+        ).filter(
+          (h) =>
+            !q ||
+            (h.key + ' ' + h.zone + ' ' + h.title)
+              .toLocaleLowerCase('pt')
+              .includes(q),
+        )
+        grid.innerHTML = ''
+        houses.forEach((h) => {
+          const card = document.createElement('article')
+          card.className = 'house-card'
+          card.innerHTML = `<div class="house-img"><img class="property-photo" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85" alt="Fotografia de imóvel para arrendamento" loading="lazy"><span class="tag">Disponível</span></div><div class="house-info"><h3></h3><div class="location">⌖ </div><div class="price"></div><p class="location"></p><div class="agent"><div class="avatar"></div><div><b></b><span></span></div><button class="btn ghost small contact">Contactar</button></div><button class="btn ghost small fav" style="width:100%;margin-top:12px">♡ Guardar nos favoritos</button></div>`
+          const photo =
+            h.image ||
+            {
+              1: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85',
+              2: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85',
+              3: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85',
+              4: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85',
+              5: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1000&q=85',
+              6: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85',
+            }[h.id] ||
+            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85'
+          card.querySelector('.property-photo').src = photo
+          card.querySelector('.property-photo').onerror = function () {
+            this.onerror = null
+            this.src =
+              'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85'
+          }
+          card.querySelector('h3').textContent = h.title
+          card.querySelector('.location').textContent = '⌖ ' + h.zone
+          card.querySelector('.price').innerHTML =
+            `${Number(h.price).toLocaleString('pt-PT')} Kz <small>/ mês</small>`
+          card.querySelector('.price').style.margin = '14px 0'
+          card.querySelector('p.location').textContent =
+            h.desc || 'Imóvel disponível para arrendamento.'
+          card.querySelector('.agent .avatar').textContent =
+            h.initials || initials(h.agent)
+          card.querySelector('.agent b').textContent = h.agent
+          card.querySelector('.agent span').textContent =
+            h.type || 'Intermediário'
+          card.querySelector('.contact').onclick = () =>
+            contactAgent(h.agent, h.zone)
+          card.querySelector('.fav').textContent = favorites.has(h.id)
+            ? '♥ Guardado nos favoritos'
+            : '♡ Guardar nos favoritos'
+          card.querySelector('.fav').onclick = () => toggleFavorite(h.id)
+          grid.appendChild(card)
+        })
+        document.getElementById('customerEmpty').style.display = houses.length
+          ? 'none'
+          : 'block'
+        document.getElementById('customerResultText').textContent =
+          houses.length + ' imóvel(is) encontrado(s) · dados fictícios'
+      }
+      function filterCustomerHouses() {
+        renderCustomerHouses()
+      }
+      function toggleFavorite(id) {
+        if (favorites.has(id)) favorites.delete(id)
+        else favorites.add(id)
+        if (currentUser) {
+          currentUser.favorites = [...favorites]
+          const db = readDB()
+          const i = db.users.findIndex((u) => u.email === currentUser.email)
+          if (i >= 0) {
+            db.users[i].favorites = [...favorites]
+            saveDB(db)
+          }
+        }
+        renderCustomerHouses()
+        updateFavoriteCount()
+        showToast(
+          favorites.has(id)
+            ? 'Casa adicionada aos favoritos.'
+            : 'Casa removida dos favoritos.',
+        )
+      }
+      function updateFavoriteCount() {
+        document.getElementById('favoriteCount').textContent = favorites.size
+      }
+      function contactAgent(name, zone) {
+        showToast(
+          'Contacto de demonstração: ' +
+            name +
+            ' · ' +
+            zone +
+            '. Na versão real, aqui seria aberto o telefone ou chat.',
+        )
+      }
+      function addDemoHouse() {
+        if (!currentUser || currentUser.role !== 'agent') {
+          showToast('Entra como intermediário para publicar um imóvel.')
+          return
+        }
+        const title = prompt('Nome do imóvel (ex.: Apartamento T2):')
+        if (!title || !title.trim()) return
+        const zone = prompt('Zona do imóvel (ex.: Talatona):')
+        if (!zone || !zone.trim()) return
+        const raw = prompt('Preço mensal em Kz (apenas números):', '200000')
+        const price = Number(raw)
+        if (!Number.isFinite(price) || price <= 0) {
+          showToast('Indica um preço válido.')
+          return
+        }
+        const db = readDB()
+        const house = {
+          id: Date.now(),
+          title: title.trim(),
+          zone: zone.trim() + ', Luanda',
+          key: zone.trim().toLocaleLowerCase('pt'),
+          price,
+          agent: currentUser.name,
+          initials: initials(currentUser.name),
+          type: 'Intermediário (demonstração)',
+          desc: 'Imóvel adicionado nesta demonstração.',
+        }
+        db.houses.push(house)
+        saveDB(db)
+        document.getElementById('statHouses').textContent = String(
+          Number(document.getElementById('statHouses').textContent || 0) + 1,
+        )
+        const grid = document.getElementById('houseGrid')
+        const card = document.createElement('article')
+        card.className = 'house-card'
+        card.dataset.zone = house.key
+        card.innerHTML =
+          '<div class="house-img"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85" alt="Fotografia de imóvel para arrendamento" loading="lazy"><span class="tag">Disponível</span></div><div class="house-info"><h3></h3><div class="location"></div><div class="price"></div><div class="agent"><div class="avatar"></div><div><b></b><span>Intermediário (demonstração)</span></div></div></div>'
+        card.querySelector('h3').textContent = house.title
+        card.querySelector('.location').textContent = '⌖ ' + house.zone
+        card.querySelector('.price').textContent =
+          price.toLocaleString('pt-PT') + ' Kz / mês'
+        card.querySelector('.agent .avatar').textContent = house.initials
+        card.querySelector('.agent b').textContent = house.agent
+        grid.prepend(card)
+        renderCustomerHouses()
+        showToast('Imóvel adicionado à base de dados.')
+      }
+      // Simulated seed data, analogous to a small local database.
+      ;(function seed() {
+        const db = readDB()
+        if (!db.houses || !db.houses.length) {
+          db.houses = demoHouses
+          saveDB(db)
+        }
+      })()
+    </script>
+  </body>
+</html>
